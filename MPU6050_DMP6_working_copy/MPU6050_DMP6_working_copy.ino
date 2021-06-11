@@ -3,9 +3,9 @@
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
-
+#include <wire.h>
 #include "MPU6050_6Axis_MotionApps20.h"
-//#include "MPU6050.h" // not necessary if using MotionApps include file
+#include "MPU6050.h" // not necessary if using MotionApps include file
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -136,6 +136,7 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+    
 }
 
 
@@ -198,6 +199,18 @@ void loop() {
             Serial.print("\t");
             Serial.println(euler[2] * 180/M_PI);
         #endif
+
+        while(1){
+          mpu.dmpGetQuaternion(&q, fifoBuffer);
+          mpu.dmpGetEuler(euler, &q);
+          Serial.print("euler\t");
+          Serial.print(euler[0] * 180/M_PI);
+          Serial.print("\t");
+          Serial.print(euler[1] * 180/M_PI);
+          Serial.print("\t");
+          Serial.println(euler[2] * 180/M_PI);
+          delay(1000);
+        }
 
         // blink LED to indicate activity
         blinkState = !blinkState;
